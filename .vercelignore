@@ -1,0 +1,6 @@
+mobile/.env
+mobile/.expo
+.expo
+.vscode
+tmp-*
+supabase/.temp
