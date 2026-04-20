@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import { useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BlurView } from "expo-blur";
@@ -281,7 +282,10 @@ function ManualTabBar({
           return (
             <Pressable
               key={tab.key}
-              onPress={() => onSelect(tab.key)}
+              onPress={() => {
+                void Haptics.selectionAsync();
+                onSelect(tab.key);
+              }}
               style={[styles.manualTabButton, focused && styles.manualTabButtonActive]}
             >
               <MaterialCommunityIcons

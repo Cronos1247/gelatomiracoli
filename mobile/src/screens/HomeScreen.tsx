@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Haptics from "expo-haptics";
 import {
   Animated,
   ActionSheetIOS,
@@ -18,6 +19,14 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
+import Reanimated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { LanguageToggle } from "../components/LanguageToggle";
 import { useMobileLanguage } from "../i18n/LanguageProvider";
 import { loadEquipmentSettings } from "../lib/equipmentSettings";
@@ -205,6 +214,32 @@ function archetypeAccent(archetype: string) {
   return "#FF5252";
 }
 
+function DigitalThermostat({ value }: { value: string }) {
+  const glowOpacity = useSharedValue(0.45);
+
+  useEffect(() => {
+    glowOpacity.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 1400, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.45, { duration: 1400, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      false
+    );
+  }, [glowOpacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: glowOpacity.value,
+    transform: [{ scale: 0.995 + glowOpacity.value * 0.02 }],
+  }));
+
+  return (
+    <Reanimated.View style={[styles.tempReadoutBox, animatedStyle]}>
+      <Text style={styles.tempReadoutText}>{`${value}\u00B0C`}</Text>
+    </Reanimated.View>
+  );
+}
+
 export function HomeScreen({
   profileName = "Maestro",
   activeEquipmentLabel = "Bravo Trittico 5L",
@@ -278,6 +313,8 @@ export function HomeScreen({
   );
 
   function openBatchFreezerEditor() {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     if (onEditBatchFreezer) {
       onEditBatchFreezer();
       return;
@@ -287,6 +324,8 @@ export function HomeScreen({
   }
 
   function openDisplayCaseEditor() {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+
     if (onEditDisplayCases) {
       onEditDisplayCases();
       return;
@@ -296,6 +335,7 @@ export function HomeScreen({
   }
 
   function handleEquipmentOptions() {
+    void Haptics.selectionAsync();
     const options = [copy.editBatchFreezer, copy.editDisplayCases, copy.cancel];
 
     if (Platform.OS === "ios") {
@@ -329,10 +369,12 @@ export function HomeScreen({
   }
 
   function addBatchFreezer() {
+    void Haptics.selectionAsync();
     setBatchFreezers((current) => [...current, `Batch Freezer ${current.length + 1}`]);
   }
 
   function removeBatchFreezer(index: number) {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setBatchFreezers((current) => {
       const next = current.filter((_, itemIndex) => itemIndex !== index);
       return next.length > 0 ? next : [activeEquipmentLabel];
@@ -346,6 +388,7 @@ export function HomeScreen({
   }
 
   function addDisplayCase() {
+    void Haptics.selectionAsync();
     setDisplayCases((current) => [
       ...current,
       {
@@ -359,6 +402,7 @@ export function HomeScreen({
   }
 
   function removeDisplayCase(index: number) {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setDisplayCases((current) => {
       const next = current.filter((_, itemIndex) => itemIndex !== index);
       return next.length > 0 ? next : INITIAL_DISPLAY_CASES;
@@ -366,6 +410,7 @@ export function HomeScreen({
   }
 
   function handleOpenFormula() {
+    void Haptics.selectionAsync();
     onViewLibrary?.();
   }
 
@@ -419,9 +464,7 @@ export function HomeScreen({
                   <Text style={styles.casePillValue}>
                     {`${activeDisplayCase.name} (${activeDisplayCase.total} Pans)`}
                   </Text>
-                  <View style={styles.tempReadoutBox}>
-                    <Text style={styles.tempReadoutText}>{`${activeDisplayCase.tempC}°C`}</Text>
-                  </View>
+                  <DigitalThermostat value={activeDisplayCase.tempC} />
                 </View>
               </View>
             </View>
@@ -502,7 +545,10 @@ export function HomeScreen({
                 <Text style={styles.addButtonText}>{copy.addBatchFreezer}</Text>
               </Pressable>
               <Pressable
-                onPress={() => setShowBatchFreezerEditor(false)}
+                onPress={() => {
+                  void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                  setShowBatchFreezerEditor(false);
+                }}
                 style={styles.primaryButton}
               >
                 <Text style={styles.primaryButtonText}>{copy.save}</Text>
@@ -573,7 +619,10 @@ export function HomeScreen({
                 <Text style={styles.addButtonText}>{copy.addDisplayCase}</Text>
               </Pressable>
               <Pressable
-                onPress={() => setShowDisplayCaseEditor(false)}
+                onPress={() => {
+                  void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                  setShowDisplayCaseEditor(false);
+                }}
                 style={styles.primaryButton}
               >
                 <Text style={styles.primaryButtonText}>{copy.save}</Text>
@@ -976,3 +1025,5 @@ const styles = StyleSheet.create({
     fontFamily: theme.typography.mono,
   },
 });
+
+

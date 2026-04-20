@@ -12,6 +12,14 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import Reanimated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { MaestroSlider } from "../components/MaestroSlider";
@@ -72,6 +80,43 @@ const ARCHETYPE_OPTIONS = [
 ] as const;
 
 const FRUIT_MATCH = /strawberry|fragola|mango|lemon|limone|fruit|sorbet/i;
+
+function AnimatedLabReadout({
+  value,
+  variant = "primary",
+}: {
+  value: string;
+  variant?: "primary" | "secondary";
+}) {
+  const glow = useSharedValue(0.45);
+
+  useEffect(() => {
+    glow.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 1400, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0.45, { duration: 1400, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1,
+      false
+    );
+  }, [glow]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: variant === "primary" ? 0.84 + glow.value * 0.16 : 0.72 + glow.value * 0.12,
+    transform: [{ scale: 0.994 + glow.value * 0.016 }],
+  }));
+
+  return (
+    <Reanimated.Text
+      style={[
+        variant === "primary" ? styles.batchValueText : styles.predictedYieldText,
+        animatedStyle,
+      ]}
+    >
+      {value}
+    </Reanimated.Text>
+  );
+}
 
 function normalize(value: string) {
   return value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
@@ -604,7 +649,7 @@ export function RecipeLabScreen({
           <Text style={styles.labHeaderTitle}>RECIPE LAB</Text>
         </View>
 
-        <GlassCard style={styles.topPanelCard} contentStyle={styles.topPanelCardContent}>
+        <GlassCard intensity={80} style={styles.topPanelCard} contentStyle={styles.topPanelCardContent}>
           <View style={styles.flavorRow}>
             <Pressable
               onPress={openFlavorPicker}
@@ -657,7 +702,7 @@ export function RecipeLabScreen({
         </GlassCard>
       </View>
 
-      <GlassCard style={styles.archetypeCard} contentStyle={styles.archetypeCardContent}>
+      <GlassCard intensity={72} style={styles.archetypeCard} contentStyle={styles.archetypeCardContent}>
         <Pressable
           onPress={() => setArchetypePickerOpen(true)}
           style={styles.archetypeSelector}
@@ -677,7 +722,7 @@ export function RecipeLabScreen({
         onToggleSolidsAdvice={() => setShowSolidsAdvice((current) => !current)}
       />
 
-      <GlassCard style={styles.batchCard} contentStyle={styles.batchCardContent}>
+      <GlassCard intensity={80} style={styles.batchCard} contentStyle={styles.batchCardContent}>
         <View style={styles.batchControlBar}>
           <Text style={styles.batchControlLabel}>BATCH MIX (KG)</Text>
           <View style={styles.batchControls}>
@@ -687,27 +732,28 @@ export function RecipeLabScreen({
             >
               <Text style={styles.inactiveButtonText}>-</Text>
             </Pressable>
-            <Pressable
-              onPress={() => {
-                setBatchDraft(batchMixKg.toFixed(1));
-                setBatchEditorOpen(true);
-              }}
-              style={styles.batchValueButton}
-            >
-              <Text style={styles.batchValueText}>{batchMixKg.toFixed(1)} KG</Text>
-            </Pressable>
+              <Pressable
+                onPress={() => {
+                  setBatchDraft(batchMixKg.toFixed(1));
+                  setBatchEditorOpen(true);
+                }}
+                style={styles.batchValueButton}
+              >
+                <AnimatedLabReadout value={`${batchMixKg.toFixed(1)} KG`} />
+              </Pressable>
             <Pressable
               onPress={() => void lab.setBatchLiters(batchMixKg + 0.5)}
               style={styles.batchStepButton}
             >
               <Text style={styles.inactiveButtonText}>+</Text>
             </Pressable>
-          </View>
-          <View style={styles.yieldRow}>
-            <Text style={styles.predictedYieldText}>
-              {`PREDICTED YIELD: ${predictedYieldLiters.toFixed(2)} L // ${predictedYieldOunces.toFixed(1)} FL OZ`}
-            </Text>
-          </View>
+            </View>
+            <View style={styles.yieldRow}>
+              <AnimatedLabReadout
+                variant="secondary"
+                value={`PREDICTED YIELD: ${predictedYieldLiters.toFixed(2)} L // ${predictedYieldOunces.toFixed(1)} FL OZ`}
+              />
+            </View>
         </View>
       </GlassCard>
 
@@ -726,7 +772,7 @@ export function RecipeLabScreen({
         ]}
       >
         <View style={styles.contentShell}>
-          <GlassCard style={styles.tableCard} contentStyle={styles.tableCardContent}>
+          <GlassCard intensity={72} style={styles.tableCard} contentStyle={styles.tableCardContent}>
             <RecipeTable
               ingredients={visibleLabIngredients}
               batchWeightGrams={lab.batchWeightGrams}

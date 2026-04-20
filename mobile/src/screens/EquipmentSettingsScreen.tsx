@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import * as Haptics from "expo-haptics";
 import {
   ActivityIndicator,
   Pressable,
@@ -81,6 +82,8 @@ export function EquipmentSettingsScreen({
   }
 
   function addNewUnit() {
+    void Haptics.selectionAsync();
+
     if (units.length <= displayCases.length) {
       setUnits((current) => [
         ...current,
@@ -111,10 +114,12 @@ export function EquipmentSettingsScreen({
   }
 
   function removeUnit(index: number) {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setUnits((current) => current.filter((_, unitIndex) => unitIndex !== index));
   }
 
   function removeDisplayCase(index: number) {
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setDisplayCases((current) => current.filter((_, caseIndex) => caseIndex !== index));
   }
 
@@ -124,9 +129,11 @@ export function EquipmentSettingsScreen({
 
     try {
       await saveEquipmentSettings({ units, displayCases });
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       onSaved?.();
       onBack();
     } catch (nextError) {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       setError(nextError instanceof Error ? nextError.message : "Unable to save hardware.");
     } finally {
       setSaving(false);

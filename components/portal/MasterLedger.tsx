@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { BadgeCheck } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   flexRender,
   getCoreRowModel,
@@ -330,7 +331,12 @@ export function MasterLedger({ initialRows, currentUserId }: MasterLedgerProps) 
 
   return (
     <div className="relative px-4 py-6 sm:px-6 lg:px-8">
-      <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-2xl">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-2xl"
+      >
         <div className="px-6 py-6 sm:px-8">
           <div className="space-y-5">
             <div className="text-center">
@@ -360,10 +366,12 @@ export function MasterLedger({ initialRows, currentUserId }: MasterLedgerProps) 
                   const active = filter === option.key;
 
                   return (
-                    <button
+                    <motion.button
                       key={option.key}
                       type="button"
                       onClick={() => setFilter(option.key)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${
                         active
                           ? "border-[#00E5FF]/25 bg-[#00E5FF]/10 text-white"
@@ -371,7 +379,7 @@ export function MasterLedger({ initialRows, currentUserId }: MasterLedgerProps) 
                       }`}
                     >
                       {option.label}
-                    </button>
+                    </motion.button>
                   );
                 })}
               </div>
@@ -432,7 +440,7 @@ export function MasterLedger({ initialRows, currentUserId }: MasterLedgerProps) 
             </tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
 
       {toast ? (
         <div

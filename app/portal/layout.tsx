@@ -23,7 +23,12 @@ export default async function PortalLayout({
   }
 
   return (
-    <div className="bg-[radial-gradient(ellipse_at_top_left,_#0F172A_0%,_#000000_100%)] min-h-screen text-white">
+    <div className="relative min-h-screen text-white">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute left-[8%] top-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute bottom-[-4rem] right-[10%] h-80 w-80 rounded-full bg-emerald-500/8 blur-3xl" />
+      </div>
+
       <aside className="bg-white/5 backdrop-blur-2xl border-r border-white/10 h-screen fixed left-0 top-0 z-40 w-64 px-6 py-8 shadow-2xl">
         <div>
           <p className="text-[11px] uppercase tracking-[0.32em] text-white/40">
@@ -47,7 +52,7 @@ export default async function PortalLayout({
         <div className="flex justify-end px-6 py-5 lg:px-10">
           <PortalLanguageToggle />
         </div>
-        {children}
+        <div className="relative">{children}</div>
       </main>
     </div>
   );

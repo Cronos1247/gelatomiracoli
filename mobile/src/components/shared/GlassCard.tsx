@@ -15,7 +15,7 @@ export function GlassCard({
   children,
   style,
   contentStyle,
-  intensity = 24,
+  intensity = 36,
   glowVariant = "none",
 }: GlassCardProps) {
   if (glowVariant === "blue") {
@@ -24,8 +24,12 @@ export function GlassCard({
         colors={["rgba(0, 198, 255, 0.6)", "rgba(0, 114, 255, 0.1)"]}
         style={[styles.blueGlowBorder, style]}
       >
-        <BlurView intensity={intensity} tint="dark" style={[styles.blueGlowCard, contentStyle]}>
-          {children}
+        <BlurView intensity={intensity} tint="dark" style={styles.blueGlowCard}>
+          <LinearGradient
+            colors={["rgba(255,255,255,0.08)", "rgba(255,255,255,0.02)"]}
+            style={StyleSheet.absoluteFillObject}
+          />
+          <View style={[styles.content, contentStyle]}>{children}</View>
         </BlurView>
       </LinearGradient>
     );
@@ -33,8 +37,12 @@ export function GlassCard({
 
   return (
     <View style={[styles.shell, style]}>
-      <BlurView intensity={intensity} tint="dark" style={[styles.card, contentStyle]}>
-        {children}
+      <BlurView intensity={intensity} tint="dark" style={styles.card}>
+        <LinearGradient
+          colors={["rgba(255,255,255,0.08)", "rgba(255,255,255,0.02)"]}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <View style={[styles.content, contentStyle]}>{children}</View>
       </BlurView>
     </View>
   );
@@ -51,7 +59,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 24,
     overflow: "hidden",
-    backgroundColor: "transparent",
+    backgroundColor: "rgba(10, 10, 15, 0.48)",
   },
   blueGlowBorder: {
     padding: 2,
@@ -61,5 +69,8 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     overflow: "hidden",
     backgroundColor: "rgba(10, 10, 15, 0.8)",
+  },
+  content: {
+    borderRadius: 24,
   },
 });

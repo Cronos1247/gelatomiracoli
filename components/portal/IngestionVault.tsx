@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { motion } from "framer-motion";
 import { CheckCircle2, CloudUpload, ScanLine } from "lucide-react";
 
 type ExtractionItem = {
@@ -83,12 +84,17 @@ export function IngestionVault() {
   return (
     <main className="px-6 pb-10 pt-4 lg:px-10">
       <div className="mx-auto max-w-5xl">
-        <div className="space-y-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="space-y-4 text-center"
+        >
           <p className="text-[11px] uppercase tracking-[0.34em] text-white/42">
             Data Scanner
           </p>
           <h1
-            className="text-5xl tracking-[0.08em] text-white"
+            className="text-gradient-serif text-5xl tracking-[0.08em] text-white"
             style={{ fontFamily: "var(--font-miracoli-serif)" }}
           >
             INGESTION VAULT
@@ -96,53 +102,73 @@ export function IngestionVault() {
           <p className="mx-auto max-w-2xl text-sm leading-7 text-white/56">
             Drop manufacturer technical sheets (PDF) for automated chemistry extraction.
           </p>
-        </div>
+        </motion.div>
 
         <section className="mt-10">
-          <div
-            {...getRootProps()}
-            className={dropZoneClassName}
+          <motion.div
+            initial={false}
+            animate={
+              isProcessing
+                ? { scale: 0.985, opacity: 0.95 }
+                : isDragActive || isDragAccept
+                  ? { scale: 1.02, opacity: 1 }
+                  : { scale: 1, opacity: 1 }
+            }
+            transition={{ type: "spring", stiffness: 180, damping: 18 }}
           >
-            <input {...getInputProps()} />
+            <div {...getRootProps()} className={dropZoneClassName}>
+              <input {...getInputProps()} />
 
-            {isProcessing ? (
-              <div className="flex w-full max-w-xl flex-col items-center gap-5">
-                <div className="rounded-full border border-white/10 bg-white/[0.04] p-5">
-                  <ScanLine className="h-14 w-14 text-[#00E5FF]" />
-                </div>
-                <div className="w-full overflow-hidden rounded-full bg-white/10">
-                  <div className="h-1 w-1/2 rounded-full bg-[#00E5FF] animate-[pulse_1s_ease-in-out_infinite]" />
-                </div>
-                <p className="font-mono text-xs uppercase tracking-[0.28em] text-[#00E5FF]">
-                  EXTRACTING PAC/POD DATA...
-                </p>
-              </div>
-            ) : (
-              <>
-                <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 p-6 shadow-[0_0_32px_rgba(0,229,255,0.12)]">
-                  <CloudUpload className="h-16 w-16 text-[#00E5FF]" />
-                </div>
-                <div className="space-y-3">
-                  <p className="text-2xl text-white">Drop PDF technical sheets here</p>
-                  <p className="text-sm text-white/54">
-                    Drag a PreGel spec sheet or dairy certificate into the vault and let the scanner start reading its chemistry.
+              {isProcessing ? (
+                <div className="flex w-full max-w-xl flex-col items-center gap-5">
+                  <div className="rounded-full border border-white/10 bg-white/[0.04] p-5">
+                    <ScanLine className="h-14 w-14 text-[#00E5FF]" />
+                  </div>
+                  <div className="w-full overflow-hidden rounded-full bg-white/10">
+                    <motion.div
+                      className="scan-line h-1 w-1/2 rounded-full"
+                      animate={{ x: ["-120%", "220%"] }}
+                      transition={{ duration: 1.15, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+                    />
+                  </div>
+                  <p className="font-mono text-xs uppercase tracking-[0.28em] text-[#00E5FF]">
+                    EXTRACTING PAC/POD DATA...
                   </p>
                 </div>
-              </>
-            )}
-          </div>
+              ) : (
+                <>
+                  <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 p-6 shadow-[0_0_32px_rgba(0,229,255,0.12)]">
+                    <CloudUpload className="h-16 w-16 text-[#00E5FF]" />
+                  </div>
+                  <div className="space-y-3">
+                    <p className="text-2xl text-white">Drop PDF technical sheets here</p>
+                    <p className="text-sm text-white/54">
+                      Drag a PreGel spec sheet or dairy certificate into the vault and let the scanner start reading its chemistry.
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
 
           <div className="mt-5 flex justify-center">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               href="/admin/ingestion"
               className="rounded-full border border-white/10 bg-white/[0.03] px-5 py-3 text-sm text-white/82 transition hover:bg-white/[0.06] hover:text-white"
             >
               Open Advanced Ingestion Workbench
             </Link>
+            </motion.div>
           </div>
         </section>
 
-        <section className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.35)]">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.12, ease: "easeOut" }}
+          className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 backdrop-blur-2xl shadow-[0_8px_32px_0_rgba(0,0,0,0.35)]"
+        >
           <div className="flex items-center justify-between gap-4">
             <div>
               <p className="text-[11px] uppercase tracking-[0.28em] text-white/38">
@@ -170,7 +196,7 @@ export function IngestionVault() {
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
       </div>
     </main>
   );

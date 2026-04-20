@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { FlaskConical, Printer, Search, Sparkles } from "lucide-react";
 
 export type RecipeVaultCard = {
@@ -111,17 +112,22 @@ export function RecipeVaultGrid({ recipes }: { recipes: RecipeVaultCard[] }) {
   return (
     <main className="px-4 pb-8 pt-2 sm:px-6 lg:px-8">
       <section className="space-y-8">
-        <div className="space-y-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="space-y-4 text-center"
+        >
           <p className="text-[11px] uppercase tracking-[0.32em] text-white/42">
             Finalized Formulas
           </p>
           <h1
-            className="text-5xl tracking-[0.08em] text-white"
+            className="text-gradient-serif text-5xl tracking-[0.08em] text-white"
             style={{ fontFamily: "var(--font-miracoli-serif)" }}
           >
             MAESTRO VAULT
           </h1>
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-full border border-white/10 bg-white/[0.03] px-5 py-4 backdrop-blur-xl sm:flex-row sm:justify-between">
+          <div className="glass mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-full px-5 py-4 sm:flex-row sm:justify-between">
             <div className="flex w-full items-center gap-3 rounded-full bg-white/5 px-4 py-3 backdrop-blur-md">
               <Search size={16} className="text-white/40" />
               <input
@@ -135,10 +141,12 @@ export function RecipeVaultGrid({ recipes }: { recipes: RecipeVaultCard[] }) {
               {FILTERS.map((option) => {
                 const active = filter === option;
                 return (
-                  <button
+                  <motion.button
                     key={option}
                     type="button"
                     onClick={() => setFilter(option)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em] transition ${
                       active
                         ? "border-cyan-400/20 bg-cyan-400/12 text-white"
@@ -146,18 +154,22 @@ export function RecipeVaultGrid({ recipes }: { recipes: RecipeVaultCard[] }) {
                     }`}
                   >
                     {option}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {filteredRecipes.length ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredRecipes.map((recipe) => (
-              <article
+            {filteredRecipes.map((recipe, index) => (
+              <motion.article
                 key={recipe.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.04, ease: "easeOut" }}
+                whileHover={{ y: -4, scale: 1.01 }}
                 className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.05] hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
               >
                 <div className="flex min-h-72 flex-col justify-between">
@@ -218,7 +230,7 @@ export function RecipeVaultGrid({ recipes }: { recipes: RecipeVaultCard[] }) {
                     </Link>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             ))}
           </div>
         ) : (

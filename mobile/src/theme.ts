@@ -2,16 +2,19 @@ import { Platform } from "react-native";
 
 export const theme = {
   colors: {
-    background: "#000000",
-    surface: "#121212",
-    surfaceAlt: "#1A1A1A",
-    border: "#262626",
-    accent: "#E5E5E5",
+    background: "#0A0B14",
+    surface: "rgba(18, 18, 24, 0.82)",
+    surfaceAlt: "rgba(24, 24, 30, 0.92)",
+    border: "rgba(255, 255, 255, 0.1)",
+    accent: "#00E5FF",
     text: "#FFFFFF",
-    muted: "#707070",
-    success: "#A5B4FC",
-    warning: "#A5B4FC",
-    danger: "#EF4444",
+    muted: "#8E93A3",
+    success: "#00E676",
+    warning: "#FFB866",
+    danger: "#FF073A",
+    cyanGlow: "#00E5FF",
+    emeraldGlow: "#00E676",
+    redGlow: "#FF073A",
   },
   radius: {
     card: 4,

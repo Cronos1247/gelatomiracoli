@@ -1,47 +1,38 @@
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
-  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
-}
-
 .miracoli-theme {
-  --background: #000000;
-  --foreground: #ffffff;
-  --surface: #121212;
-  --surface-strong: #121212;
-  --surface-muted: rgba(18, 18, 18, 0.88);
-  --accent: #e5e5e5;
-  --accent-soft: rgba(229, 229, 229, 0.08);
-  --accent-border: #262626;
-  --text-muted: #707070;
-  --danger: #ef4444;
-  --font-miracoli-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, ui-serif,
-    serif;
-  background: #000000;
+  --surface: rgba(255, 255, 255, 0.03);
+  --surface-strong: rgba(255, 255, 255, 0.06);
+  --surface-muted: rgba(255, 255, 255, 0.02);
+  --accent: var(--cyan-glow);
+  --accent-soft: rgba(0, 229, 255, 0.08);
+  --accent-border: rgba(255, 255, 255, 0.1);
+  --text-muted: rgba(255, 255, 255, 0.56);
+  --danger: var(--red-glow);
+  --font-miracoli-serif: var(--font-playfair), Georgia, serif;
+  background: transparent;
   color: var(--foreground);
 }
 
 .miracoli-theme *::selection {
-  background: rgba(165, 180, 252, 0.24);
+  background: rgba(0, 229, 255, 0.2);
   color: var(--foreground);
 }
 
 .miracoli-theme .luxury-card {
-  border: 1px solid var(--accent-border);
-  background: var(--surface-muted);
-  box-shadow: none;
-  backdrop-filter: blur(10px);
+  background: var(--gradient-glass);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(24px) saturate(140%);
 }
 
 .miracoli-theme .gold-chip {
-  border: 1px solid var(--accent-border);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
   color: var(--foreground);
 }
 
 .miracoli-theme .metric-value {
-  color: var(--foreground);
+  color: var(--cyan-glow);
+  text-shadow: 0 0 15px rgba(0, 229, 255, 0.35);
 }
 
 .miracoli-theme .recipe-grid {
@@ -61,15 +52,15 @@
 }
 
 .miracoli-theme .miracoli-ingredient-row {
-  border: 1px solid #262626;
-  background: rgba(18, 18, 18, 0.9);
-  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(18px);
 }
 
 .miracoli-theme .miracoli-slider::-webkit-slider-runnable-track {
   height: 0.5rem;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(229, 229, 229, 0.72), rgba(165, 180, 252, 0.18));
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.72), rgba(0, 230, 118, 0.18));
 }
 
 .miracoli-theme .miracoli-slider::-webkit-slider-thumb {
@@ -78,58 +69,57 @@
   height: 22px;
   width: 22px;
   border-radius: 999px;
-  border: 1px solid #262626;
-  background: #e5e5e5;
-  box-shadow: none;
-  backdrop-filter: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #e5fbff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.18);
 }
 
 .miracoli-theme .miracoli-slider::-moz-range-track {
   height: 0.5rem;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(229, 229, 229, 0.72), rgba(165, 180, 252, 0.18));
+  background: linear-gradient(90deg, rgba(0, 229, 255, 0.72), rgba(0, 230, 118, 0.18));
 }
 
 .miracoli-theme .miracoli-slider::-moz-range-thumb {
   height: 22px;
   width: 22px;
   border-radius: 999px;
-  border: 1px solid #262626;
-  background: #e5e5e5;
-  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #e5fbff;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.18);
 }
 
 .miracoli-theme .miracoli-danger-pulse {
-  border-color: rgba(255, 140, 111, 0.44);
+  border-color: rgba(255, 7, 58, 0.32);
   box-shadow:
-    0 0 0 1px rgba(255, 140, 111, 0.18),
-    0 0 0 0 rgba(255, 140, 111, 0.28);
+    0 0 0 1px rgba(255, 7, 58, 0.12),
+    0 0 24px rgba(255, 7, 58, 0.12);
   animation: miracoli-alert-pulse 1.8s ease-in-out infinite;
 }
 
 .miracoli-theme .miracoli-engine-glow {
   box-shadow:
-    0 0 0 1px rgba(38, 38, 38, 1),
-    0 0 24px rgba(165, 180, 252, 0.1);
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 24px rgba(0, 229, 255, 0.12);
 }
 
 @keyframes miracoli-alert-pulse {
   0% {
     box-shadow:
-      0 0 0 1px rgba(255, 140, 111, 0.18),
-      0 0 0 0 rgba(255, 140, 111, 0.24);
+      0 0 0 1px rgba(255, 7, 58, 0.16),
+      0 0 0 0 rgba(255, 7, 58, 0.2);
   }
 
   70% {
     box-shadow:
-      0 0 0 1px rgba(255, 140, 111, 0.28),
-      0 0 0 14px rgba(255, 140, 111, 0);
+      0 0 0 1px rgba(255, 7, 58, 0.26),
+      0 0 0 14px rgba(255, 7, 58, 0);
   }
 
   100% {
     box-shadow:
-      0 0 0 1px rgba(255, 140, 111, 0.18),
-      0 0 0 0 rgba(255, 140, 111, 0);
+      0 0 0 1px rgba(255, 7, 58, 0.16),
+      0 0 0 0 rgba(255, 7, 58, 0);
   }
 }
 
