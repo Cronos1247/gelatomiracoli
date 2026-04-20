@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/mobile/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -23,6 +24,11 @@
 # misc
 .DS_Store
 *.pem
+/.expo/
+/.vscode/
+/tmp-*
+/mobile/.expo
+/mobile/dist
 
 # debug
 npm-debug.log*
@@ -39,3 +45,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
