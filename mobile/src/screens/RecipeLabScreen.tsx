@@ -1190,6 +1190,9 @@ const styles = StyleSheet.create({
   commandRow: {
     gap: 14,
     paddingHorizontal: 20,
+    width: "100%",
+    maxWidth: 430,
+    alignSelf: "center",
   },
   labHeader: {
     alignItems: "center",
@@ -1212,17 +1215,22 @@ const styles = StyleSheet.create({
   },
   topPanelCard: {
     width: "100%",
+    maxWidth: 392,
+    alignSelf: "center",
   },
   topPanelCardContent: {
-    paddingHorizontal: 18,
-    paddingVertical: 18,
-    gap: 16,
-    backgroundColor: "rgba(10, 10, 15, 0.45)",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    gap: 18,
+    backgroundColor: "rgba(255,255,255,0.01)",
   },
   flavorRow: {
     flexDirection: "row",
     alignItems: "flex-end",
     gap: 12,
+    width: "100%",
+    maxWidth: 320,
+    alignSelf: "center",
   },
   flavorSelector: {
     flex: 1,
@@ -1275,6 +1283,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
+    width: "100%",
+    maxWidth: 320,
+    alignSelf: "center",
   },
   baseToggle: {
     minWidth: 120,
@@ -1310,11 +1321,14 @@ const styles = StyleSheet.create({
   },
   archetypeCard: {
     marginHorizontal: 20,
+    width: "100%",
+    maxWidth: 392,
+    alignSelf: "center",
   },
   archetypeCardContent: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: "rgba(10, 10, 15, 0.45)",
+    paddingHorizontal: 20,
+    paddingVertical: 18,
+    backgroundColor: "rgba(255,255,255,0.01)",
   },
   archetypeChip: {
     borderWidth: 1,
@@ -1345,14 +1359,17 @@ const styles = StyleSheet.create({
     width: "100%",
     alignSelf: "center",
     paddingHorizontal: 20,
+    maxWidth: 430,
   },
   tableCard: {
     width: "100%",
+    maxWidth: 392,
+    alignSelf: "center",
   },
   tableCardContent: {
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    backgroundColor: "rgba(10, 10, 15, 0.45)",
+    paddingHorizontal: 18,
+    paddingVertical: 18,
+    backgroundColor: "rgba(255,255,255,0.02)",
   },
   addIngredientButton: {
     marginTop: 16,
@@ -1393,11 +1410,15 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "100%",
     maxWidth: 360,
+    shadowColor: "rgba(255,255,255,0.35)",
+    shadowOpacity: 0.18,
+    shadowRadius: 1,
+    shadowOffset: { width: 0, height: 1 },
   },
   batchCardContent: {
     paddingHorizontal: 20,
     paddingVertical: 16,
-    backgroundColor: "rgba(10, 10, 15, 0.45)",
+    backgroundColor: "rgba(255,255,255,0.02)",
   },
   batchControlLabel: {
     color: theme.colors.muted,

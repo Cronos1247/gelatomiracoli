@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import type { LabIngredient } from "../lab/useRecipeLab";
 import { theme } from "../theme";
@@ -147,10 +147,11 @@ function TableRowGroup({
 
         onSelectRow(ingredient);
       }}
-      style={[
+      style={({ hovered }) => [
         styles.row,
         selectedRole === ingredient.role && styles.rowActive,
         ingredient.ghost && styles.rowGhost,
+        Platform.OS === "web" && hovered ? styles.rowHover : null,
       ]}
     >
       <View style={styles.nameCell}>
@@ -238,11 +239,13 @@ function TableRowGroup({
 
 const styles = StyleSheet.create({
   wrap: {
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-    backgroundColor: theme.colors.background,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.08)",
+    borderRadius: 24,
+    backgroundColor: "rgba(255,255,255,0.01)",
     width: "100%",
-    paddingHorizontal: 4,
+    paddingHorizontal: 14,
+    paddingTop: 4,
     overflow: "hidden",
   },
   headerRow: {
@@ -256,11 +259,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
+    borderBottomColor: "rgba(255,255,255,0.05)",
     paddingVertical: 16,
   },
   rowActive: {
-    backgroundColor: "#121212",
+    backgroundColor: "rgba(255,255,255,0.05)",
+  },
+  rowHover: {
+    backgroundColor: "rgba(255,255,255,0.05)",
   },
   rowGhost: {
     opacity: 0.5,

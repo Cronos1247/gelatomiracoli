@@ -292,6 +292,22 @@ const styles = StyleSheet.create({
   appShell: {
     flex: 1,
     backgroundColor: theme.colors.background,
+    width: "100%",
+    alignSelf: "center",
+    ...(Platform.OS === "web"
+      ? {
+          maxWidth: 430,
+          overflow: "hidden",
+          borderRadius: 32,
+          borderWidth: 1,
+          borderColor: "rgba(255,255,255,0.08)",
+          shadowColor: "#000000",
+          shadowOpacity: 0.45,
+          shadowRadius: 36,
+          shadowOffset: { width: 0, height: 18 },
+          marginVertical: 16,
+        }
+      : {}),
   },
   scene: {
     flex: 1,

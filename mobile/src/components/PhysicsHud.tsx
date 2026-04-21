@@ -69,8 +69,7 @@ export function PhysicsHud({
   return (
     <View style={styles.shell}>
       <GlassCard
-        glowVariant="blue"
-        intensity={80}
+        intensity={72}
         style={styles.hudCard}
         contentStyle={styles.hudCardContent}
       >
@@ -121,35 +120,38 @@ function Metric({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   shell: {
     alignItems: "center",
-    gap: 6,
+    gap: 10,
     paddingHorizontal: 20,
   },
   hudCard: {
     width: "100%",
+    maxWidth: 392,
+    alignSelf: "center",
   },
   hudCardContent: {
-    paddingHorizontal: 18,
-    paddingVertical: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 22,
+    backgroundColor: "rgba(255,255,255,0.02)",
   },
   bar: {
-    minHeight: 40,
+    minHeight: 64,
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: 16,
     width: "100%",
   },
   metricsRow: {
-    flex: 0,
+    width: "100%",
     flexDirection: "row",
-    alignItems: "flex-end",
-    gap: 0,
-    justifyContent: "center",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   metric: {
-    minWidth: 72,
-    paddingRight: 16,
-    marginRight: 16,
+    flex: 1,
+    minWidth: 0,
+    paddingRight: 14,
+    marginRight: 14,
     borderRightWidth: 1,
     borderRightColor: theme.colors.border,
   },
@@ -162,27 +164,24 @@ const styles = StyleSheet.create({
     color: theme.colors.muted,
     fontSize: 10,
     fontWeight: "700",
-    letterSpacing: 1,
-    marginBottom: 4,
+    letterSpacing: 1.4,
+    marginBottom: 8,
     fontFamily: theme.typography.mono,
   },
   value: {
-    fontSize: 22,
-    fontFamily: "Courier",
-    textShadowRadius: 10,
+    fontSize: 34,
+    fontFamily: theme.typography.mono,
+    fontWeight: "700",
+    textShadowRadius: 15,
     textShadowOffset: { width: 0, height: 0 },
   },
   valueBalanced: {
     color: "#FF073A",
-    textShadowColor: "rgba(255, 7, 58, 0.7)",
-  },
-  valueDanger: {
-    color: theme.colors.danger,
-    textShadowColor: "rgba(255, 7, 58, 0.82)",
+    textShadowColor: "rgba(255, 7, 58, 0.5)",
   },
   valueCold: {
-    color: "#60A5FA",
-    textShadowColor: "rgba(96, 165, 250, 0.7)",
+    color: "#FF073A",
+    textShadowColor: "rgba(255, 7, 58, 0.5)",
   },
   solidsValueRow: {
     flexDirection: "row",
