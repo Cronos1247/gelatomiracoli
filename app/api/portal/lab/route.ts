@@ -15,7 +15,18 @@ type LabSavePayload = {
   totalPac?: number;
   totalPod?: number;
   totalSolids?: number;
+  totalFat?: number;
   totalMixWeight?: number;
+  totalRecipeCost?: number;
+  archetypeKey?: string;
+  baseType?: string;
+  batchLiters?: number;
+  flavorIntensityPct?: number;
+  podBias?: number;
+  equipmentId?: string | null;
+  activeCaseId?: string | null;
+  overrunTargetPct?: number;
+  keyword?: string;
 };
 
 export async function POST(request: Request) {
@@ -54,12 +65,27 @@ export async function POST(request: Request) {
       name: recipeName,
       created_at: new Date().toISOString(),
       total_weight_grams: Number(payload.totalMixWeight ?? 0),
-      is_sorbet: false,
+      equipment_id: typeof payload.equipmentId === "string" ? payload.equipmentId : null,
+      active_case_id: typeof payload.activeCaseId === "string" ? payload.activeCaseId : null,
+      is_on_display: typeof payload.activeCaseId === "string",
+      is_sorbet:
+        payload.baseType === "water" ||
+        payload.archetypeKey === "fruit-sorbet" ||
+        payload.archetypeKey === "vegan",
       logic_snapshot: {
-        archetypeKey: "portal-lab",
+        archetypeKey:
+          typeof payload.archetypeKey === "string" ? payload.archetypeKey : "portal-lab",
+        baseType: typeof payload.baseType === "string" ? payload.baseType : "dairy",
+        batchLiters: Number(payload.batchLiters ?? 1),
+        flavorIntensityPct: Number(payload.flavorIntensityPct ?? 10),
+        podBias: Number(payload.podBias ?? 1),
+        overrunTargetPct: Number(payload.overrunTargetPct ?? 35),
+        keyword: typeof payload.keyword === "string" ? payload.keyword : recipeName,
+        estimatedCost: Number(payload.totalRecipeCost ?? 0),
         totalPac: Number(payload.totalPac ?? 0),
         totalPod: Number(payload.totalPod ?? 0),
         totalSolids: Number(payload.totalSolids ?? 0),
+        totalFat: Number(payload.totalFat ?? 0),
         ingredients_json: ingredients.map((ingredient) => ({
           name: String(ingredient.name ?? "Ingredient"),
           grams: Number(ingredient.grams ?? 0),

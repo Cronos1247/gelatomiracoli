@@ -27,6 +27,10 @@
 /.expo/
 /.vscode/
 /tmp-*
+/mobile-web.log
+/mobile-web.err
+/portal-lab-dev.log
+/portal-lab-dev.err
 /mobile/.expo
 /mobile/dist
 
