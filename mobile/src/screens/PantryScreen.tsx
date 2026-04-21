@@ -110,7 +110,7 @@ function matchesCategoryChip(category: string | null | undefined, chip: PantryCa
   return false;
 }
 
-export function PantryScreen() {
+export function PantryScreen({ titleOverride }: { titleOverride?: string }) {
   const { language } = useMobileLanguage();
   const copy = PANTRY_COPY[language];
   const [ingredients, setIngredients] = useState<MobileIngredient[]>([]);
@@ -201,7 +201,7 @@ export function PantryScreen() {
           ListHeaderComponent={
             <View style={styles.header}>
               <View style={styles.headerRow}>
-                <Text style={styles.title}>{copy.title}</Text>
+                <Text style={styles.title}>{titleOverride ?? copy.title}</Text>
                 <LanguageToggle />
               </View>
 
@@ -313,8 +313,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#FFFFFF",
     fontSize: 24,
-    fontFamily: theme.typography.sans,
-    fontWeight: "600",
+    fontFamily: theme.typography.serif,
   },
   searchShell: {
     borderRadius: 18,

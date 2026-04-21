@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import * as Haptics from "expo-haptics";
 import {
   Alert,
   StyleSheet,
@@ -202,6 +203,7 @@ export function RecipeLabScreen({
   const [finalizeCategory, setFinalizeCategory] = useState("Gelato");
   const [showFinalizeCategoryOptions, setShowFinalizeCategoryOptions] = useState(false);
   const [isSavingRecipe, setIsSavingRecipe] = useState(false);
+  const lastSliderHapticRef = useRef(0);
  
   const handleAssistSubmit = useCallback(
     (command: string) => applyAssistantCommand(command, setLanguage),
@@ -213,18 +215,13 @@ export function RecipeLabScreen({
     [lab.archetypeKey]
   );
 
-  const activePercentIngredient =
-    lab.ingredients.find((ingredient) => ingredient.role === percentEditorRole) ?? null;
-
-  const activePercentValue = activePercentIngredient
-    ? (activePercentIngredient.grams / Math.max(lab.batchWeightGrams, 1)) * 100
-    : 0;
   const batchMixKg = lab.batchWeightGrams / 1000;
   const mixLiters = batchMixKg / 1.08;
   const overrunMultiplier = baseType === "water" ? 1.25 : 1.35;
   const predictedYieldLiters = mixLiters * overrunMultiplier;
   const predictedYieldOunces = predictedYieldLiters * 33.814;
   const activeEquipment = equipmentUnits[0] ?? null;
+  const lockedOverrunPercent = baseType === "water" ? 25 : 35;
   const productionBatchWeightGrams = activeEquipment
     ? Math.round(activeEquipment.max_batch_l * 1.08 * 1000)
     : lab.batchWeightGrams;
@@ -482,6 +479,17 @@ export function RecipeLabScreen({
     }
   }
 
+  function pulseSliderHaptic() {
+    const now = Date.now();
+
+    if (now - lastSliderHapticRef.current < 70) {
+      return;
+    }
+
+    lastSliderHapticRef.current = now;
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  }
+
   function resetQuickAddForm() {
     setQuickAddName("");
     setQuickAddPac("0");
@@ -727,7 +735,10 @@ export function RecipeLabScreen({
           <Text style={styles.batchControlLabel}>BATCH MIX (KG)</Text>
           <View style={styles.batchControls}>
             <Pressable
-              onPress={() => void lab.setBatchLiters(Math.max(0.5, batchMixKg - 0.5))}
+              onPress={() => {
+                void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                void lab.setBatchLiters(Math.max(0.5, batchMixKg - 0.5));
+              }}
               style={styles.batchStepButton}
             >
               <Text style={styles.inactiveButtonText}>-</Text>
@@ -742,7 +753,10 @@ export function RecipeLabScreen({
                 <AnimatedLabReadout value={`${batchMixKg.toFixed(1)} KG`} />
               </Pressable>
             <Pressable
-              onPress={() => void lab.setBatchLiters(batchMixKg + 0.5)}
+              onPress={() => {
+                void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                void lab.setBatchLiters(batchMixKg + 0.5);
+              }}
               style={styles.batchStepButton}
             >
               <Text style={styles.inactiveButtonText}>+</Text>
@@ -753,6 +767,13 @@ export function RecipeLabScreen({
                 variant="secondary"
                 value={`PREDICTED YIELD: ${predictedYieldLiters.toFixed(2)} L // ${predictedYieldOunces.toFixed(1)} FL OZ`}
               />
+            </View>
+            <View style={styles.guardrailPanel}>
+              <Text style={styles.guardrailLabel}>SELECTED RECIPE</Text>
+              <Text style={styles.guardrailValue}>{archetypeLabel}</Text>
+              <Text style={styles.guardrailMeta}>
+                OVERRUN LOCKED // {lockedOverrunPercent}% air incorporation is visual only on mobile.
+              </Text>
             </View>
         </View>
       </GlassCard>
@@ -795,20 +816,22 @@ export function RecipeLabScreen({
               onToggleLock={(ingredient) => void lab.toggleLock(ingredient.role)}
               onDeleteRow={(ingredient) => void lab.removeIngredient(ingredient.id ?? ingredient.role)}
               renderPercentOverlay={(ingredient) =>
-                ingredient.role === "flavor" ? (
+                <View style={styles.weightSliderWrap}>
                   <MaestroSlider
-                    label={`${t("intensity")} // ${archetypeLabel}`}
-                    value={activePercentValue}
-                    minimumValue={4}
-                    maximumValue={20}
-                    onChange={(next) => void lab.setIngredientPercent("flavor", next)}
+                    label={`${ingredient.name} // grams`}
+                    value={ingredient.grams}
+                    minimumValue={0}
+                    maximumValue={Math.max(lab.batchWeightGrams, 1000)}
+                    onChange={(next) => {
+                      pulseSliderHaptic();
+                      void lab.updateManualWeight(ingredient.role, next);
+                    }}
                     compact
                   />
-                ) : (
                   <Text style={styles.inlineHint}>
-                    {t("intensity")} control is reserved for the active flavor load.
+                    Weight is the only editable variable here. Overrun stays locked to the Maestro plan.
                   </Text>
-                )
+                </View>
               }
               onAddSuggestion={(ingredient) => handleAddGhostSuggestion(ingredient)}
             />
@@ -1184,7 +1207,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 24,
     fontWeight: "600",
-    fontFamily: theme.typography.sans,
+    fontFamily: theme.typography.serif,
     textAlign: "center",
   },
   topPanelCard: {
@@ -1426,6 +1449,36 @@ const styles = StyleSheet.create({
     fontSize: 10,
     letterSpacing: 1.1,
     fontFamily: theme.typography.mono,
+  },
+  guardrailPanel: {
+    marginTop: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.12)",
+    backgroundColor: "rgba(255,255,255,0.04)",
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    gap: 4,
+  },
+  guardrailLabel: {
+    color: theme.colors.muted,
+    fontSize: 10,
+    letterSpacing: 1.4,
+    fontFamily: theme.typography.mono,
+  },
+  guardrailValue: {
+    color: theme.colors.text,
+    fontSize: 18,
+    fontFamily: theme.typography.serif,
+  },
+  guardrailMeta: {
+    color: "rgba(255,255,255,0.62)",
+    fontSize: 11,
+    lineHeight: 16,
+    fontFamily: theme.typography.mono,
+  },
+  weightSliderWrap: {
+    gap: 8,
   },
   inlineHint: {
     color: theme.colors.muted,

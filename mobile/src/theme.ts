@@ -21,6 +21,11 @@ export const theme = {
     pill: 999,
   },
   typography: {
+    serif: Platform.select({
+      ios: "Georgia",
+      android: "serif",
+      default: "serif",
+    }),
     mono: Platform.select({
       ios: "Menlo",
       android: "monospace",

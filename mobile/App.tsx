@@ -20,23 +20,21 @@ import { usePantry } from "./src/hooks/usePantry";
 import { useRecipes } from "./src/hooks/useRecipes";
 import "./src/i18n";
 import { MobileLanguageProvider, useMobileLanguage } from "./src/i18n/LanguageProvider";
-import { HomeScreen } from "./src/screens/HomeScreen";
 import { inferIngredientFlavor, savePantryIngredient } from "./src/lib/pantry";
 import { EquipmentSettingsScreen } from "./src/screens/EquipmentSettingsScreen";
-import { LibraryScreen } from "./src/screens/LibraryScreen";
+import { MatrixScreen } from "./src/screens/MatrixScreen";
 import { PantryScreen } from "./src/screens/PantryScreen";
-import { ProfileScreen } from "./src/screens/ProfileScreen";
 import { RecipeLabScreen } from "./src/screens/RecipeLabScreen";
+import { ScannerScreen } from "./src/screens/ScannerScreen";
 import { SettingsDetailScreen } from "./src/screens/SettingsDetailScreen";
 import { theme } from "./src/theme";
 import type { MobileIngredient } from "./src/types";
 
 type AppSection =
-  | "home"
-  | "library"
   | "lab"
-  | "pantry"
-  | "profile"
+  | "matrix"
+  | "scanner"
+  | "ledger"
   | "equipment-settings"
   | "account-settings"
   | "preferences-settings";
@@ -59,9 +57,9 @@ function AppShell() {
   const { isHydrated: isLanguageHydrated } = useMobileLanguage();
   const insets = useSafeAreaInsets();
   const { loading, ingredients, refresh } = usePantry();
-  const { recipes, refresh: refreshRecipes } = useRecipes();
+  const { refresh: refreshRecipes } = useRecipes();
   const [customIngredients, setCustomIngredients] = useState<MobileIngredient[]>([]);
-  const [activeSection, setActiveSection] = useState<AppSection>("home");
+  const [activeSection, setActiveSection] = useState<AppSection>("lab");
 
   useEffect(() => {
     void AsyncStorage.getItem(MOBILE_CUSTOM_PANTRY_KEY).then((storedValue) => {
@@ -130,15 +128,6 @@ function AppShell() {
     <View style={styles.centered}>
       <ActivityIndicator color="#FFFFFF" />
     </View>
-  ) : activeSection === "home" ? (
-    <HomeScreen
-      profileName="Maestro"
-      activeEquipmentLabel="Bravo Trittico 5L"
-      recipeCount={recipes.length}
-      onViewLibrary={() => setActiveSection("library")}
-      onEditBatchFreezer={() => setActiveSection("equipment-settings")}
-      onEditDisplayCases={() => setActiveSection("equipment-settings")}
-    />
   ) : activeSection === "lab" ? (
     <LabScreen
       ingredients={sessionIngredients}
@@ -146,41 +135,30 @@ function AppShell() {
       onQuickAddIngredient={handleQuickAddIngredient}
       onRecipeSaved={refreshRecipes}
     />
-  ) : activeSection === "library" ? (
-    <LibraryScreen />
-  ) : activeSection === "pantry" ? (
-    <PantryScreen />
+  ) : activeSection === "matrix" ? (
+    <MatrixScreen onOpenHardware={() => setActiveSection("equipment-settings")} />
+  ) : activeSection === "scanner" ? (
+    <ScannerScreen />
+  ) : activeSection === "ledger" ? (
+    <PantryScreen titleOverride="LEDGER" />
   ) : activeSection === "equipment-settings" ? (
     <EquipmentSettingsScreen
-      onBack={() => setActiveSection("profile")}
-      onSaved={() => setActiveSection("home")}
-    />
-  ) : activeSection === "account-settings" ? (
-    <SettingsDetailScreen
-      title="MY ACCOUNT"
-      description="Account preferences and profile controls will live here."
-      onBack={() => setActiveSection("profile")}
-    />
-  ) : activeSection === "preferences-settings" ? (
-    <SettingsDetailScreen
-      title="APP PREFERENCES"
-      description="Global app preferences and interface controls will live here."
-      onBack={() => setActiveSection("profile")}
+      onBack={() => setActiveSection("matrix")}
+      onSaved={() => setActiveSection("matrix")}
     />
   ) : (
-    <ProfileScreen
-      onOpenAccountSettings={() => setActiveSection("account-settings")}
-      onOpenEquipmentSettings={() => setActiveSection("equipment-settings")}
-      onOpenAppPreferences={() => setActiveSection("preferences-settings")}
+    <SettingsDetailScreen
+      title="SETTINGS"
+      description="Additional command controls will live here."
+      onBack={() => setActiveSection("matrix")}
     />
   );
 
   const showManualTabBar =
-    activeSection === "home" ||
-    activeSection === "library" ||
     activeSection === "lab" ||
-    activeSection === "pantry" ||
-    activeSection === "profile";
+    activeSection === "matrix" ||
+    activeSection === "scanner" ||
+    activeSection === "ledger";
 
   return (
     <>
@@ -265,16 +243,15 @@ function ManualTabBar({
     label: string;
     icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
   }> = [
-    { key: "home", label: "Home", icon: "home-variant-outline" },
-    { key: "library", label: "Library", icon: "book-open-page-variant-outline" },
     { key: "lab", label: "Lab", icon: "flask-outline" },
-    { key: "pantry", label: "Pantry", icon: "package-variant-closed" },
-    { key: "profile", label: "Profile", icon: "account-circle-outline" },
+    { key: "matrix", label: "Matrix", icon: "view-carousel-outline" },
+    { key: "scanner", label: "Scanner", icon: "line-scan" },
+    { key: "ledger", label: "Ledger", icon: "database-outline" },
   ];
 
   return (
     <View style={[styles.manualTabBarFrame, { bottom: Math.max(bottomInset, 12) }]}>
-      <BlurView tint="dark" intensity={40} style={StyleSheet.absoluteFillObject} />
+      <BlurView tint="dark" intensity={80} style={StyleSheet.absoluteFillObject} />
       <View style={styles.manualTabBar}>
         {tabs.map((tab) => {
           const focused = activeSection === tab.key;
