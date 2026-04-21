@@ -55,12 +55,8 @@ type ToastState =
 
 const ARCHETYPE_OPTIONS = [
   { key: "milk-based-standard" as const, label: "Classic Crema" },
-  { key: "high-fat" as const, label: "Rich Chocolate / Nut" },
-  { key: "fruit-sorbet" as const, label: "Fresh Fruit Sorbet" },
-  { key: "low-sugar" as const, label: "Custom Lab" },
-  { key: "clean-label" as const, label: "From Scratch" },
-  { key: "vegan" as const, label: "Vegan Structure" },
-  { key: "sugar-free" as const, label: "Sugar-Free" },
+  { key: "fruit-sorbet" as const, label: "Fruit Sorbetto" },
+  { key: "low-sugar" as const, label: "Custom Matrix" },
 ];
 
 const BASE_OPTIONS = [
@@ -399,9 +395,9 @@ export function PortalRecipeLab({
   equipmentUnits: PortalEquipmentUnit[];
   ingredients: PortalLabIngredient[];
 }) {
-  const [recipeName, setRecipeName] = useState("Pistachio Maestro");
+  const [recipeName, setRecipeName] = useState("Classic Pistachio");
   const [keyword, setKeyword] = useState("Pistachio");
-  const [archetypeKey, setArchetypeKey] = useState<RecipeArchetypeKey>("high-fat");
+  const [archetypeKey, setArchetypeKey] = useState<RecipeArchetypeKey>("milk-based-standard");
   const [baseType, setBaseType] = useState<RecipeBaseType>("dairy");
   const [batchLiters, setBatchLiters] = useState(1);
   const [flavorIntensityPct, setFlavorIntensityPct] = useState(10);
@@ -671,7 +667,7 @@ export function PortalRecipeLab({
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-12">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-6 py-12">
       <div className="space-y-8">
         <div className="text-center">
           <p className="font-mono text-[11px] uppercase tracking-[0.32em] text-[#D4AF37]/75">
@@ -688,11 +684,11 @@ export function PortalRecipeLab({
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
           <section className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
             <div className="grid gap-5 md:grid-cols-2">
               <GlassSelect
-                label="Archetype"
+                label="Structure Archetype"
                 value={archetypeKey}
                 options={ARCHETYPE_OPTIONS.map((option) => ({
                   value: option.key,
