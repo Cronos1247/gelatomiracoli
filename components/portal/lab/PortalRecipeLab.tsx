@@ -122,14 +122,14 @@ function GlassSelect<T extends string>({
   const active = options.find((option) => option.value === value) ?? options[0];
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <span className="mb-2 block font-mono text-xs uppercase tracking-[0.28em] text-white/38">
         {label}
       </span>
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-white backdrop-blur-xl transition hover:border-white/18 hover:bg-white/[0.08]"
+        className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left text-white backdrop-blur-2xl transition hover:border-white/18 hover:bg-white/[0.06]"
       >
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-white">{active?.label}</p>
@@ -146,7 +146,7 @@ function GlassSelect<T extends string>({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="absolute z-20 mt-3 w-full rounded-[1.5rem] border border-white/10 bg-[#0b0d15]/95 p-2 shadow-2xl backdrop-blur-2xl"
+            className="absolute z-50 mt-3 w-full rounded-2xl border border-white/10 bg-[#0b0d15]/95 p-2 shadow-2xl backdrop-blur-2xl"
           >
             {options.map((option) => (
               <button
@@ -204,14 +204,14 @@ function FlavorCombobox({
   }, [deferredQuery, ingredients]);
 
   return (
-    <div className="relative">
+    <div className="relative z-50">
       <span className="mb-2 block font-mono text-xs uppercase tracking-[0.28em] text-white/38">
         Primary Flavor
       </span>
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-left text-white backdrop-blur-xl transition hover:border-white/18 hover:bg-white/[0.08]"
+        className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-left text-white backdrop-blur-2xl transition hover:border-white/18 hover:bg-white/[0.06]"
       >
         <div className="min-w-0">
           <p className="truncate text-sm font-medium text-white">{keyword}</p>
@@ -226,13 +226,13 @@ function FlavorCombobox({
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="absolute z-20 mt-3 w-full rounded-[1.5rem] border border-white/10 bg-[#0b0d15]/95 p-3 shadow-2xl backdrop-blur-2xl"
+            className="absolute z-50 mt-3 w-full rounded-2xl border border-white/10 bg-[#0b0d15]/95 p-3 shadow-2xl backdrop-blur-2xl"
           >
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search pistachio, hazelnut, chocolate, strawberry..."
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
+              className="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
             />
             <div className="mt-3 max-h-72 space-y-2 overflow-y-auto pr-1">
               {options.map((ingredient) => (
@@ -267,13 +267,13 @@ function SummaryCard({
   accent?: "cyan" | "emerald";
 }) {
   return (
-    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] backdrop-blur-xl">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] backdrop-blur-2xl">
       <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/36">{label}</p>
       <p
         className={classNames(
           "mt-3 font-mono text-2xl font-bold",
           accent === "cyan"
-            ? "text-[#00E5FF] drop-shadow-[0_0_12px_rgba(0,229,255,0.35)]"
+            ? "text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)]"
             : "text-[#00E676] drop-shadow-[0_0_12px_rgba(0,230,118,0.25)]"
         )}
       >
@@ -305,7 +305,7 @@ function FormulaRow({
   return (
     <motion.div
       layout
-      className="grid gap-4 rounded-[1.4rem] border border-white/8 bg-white/[0.02] px-4 py-4 transition-colors hover:bg-white/[0.05] md:grid-cols-[1.4fr_0.6fr_0.6fr_0.75fr]"
+      className="grid gap-4 rounded-2xl border border-white/8 bg-white/[0.02] px-4 py-4 transition-colors hover:bg-white/[0.05] md:grid-cols-[1.4fr_0.6fr_0.6fr_0.75fr]"
     >
       <div className="min-w-0">
         <div className="flex items-start justify-between gap-3">
@@ -334,7 +334,7 @@ function FormulaRow({
           step={5}
           value={Number.isFinite(row.grams) ? row.grams : 0}
           onChange={(event) => onWeightChange(row.role, Number(event.target.value))}
-          className="w-full rounded-xl border border-white/10 bg-black/30 px-3 py-3 text-right font-mono text-lg text-[#00E5FF] outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
+          className="w-full rounded-xl border border-white/10 bg-white/[0.02] px-3 py-3 text-right font-mono text-lg text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)] outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
         />
       </div>
 
@@ -342,7 +342,7 @@ function FormulaRow({
         <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.24em] text-white/35">
           Share
         </span>
-        <div className="rounded-xl border border-white/10 bg-black/30 px-3 py-3 text-right font-mono text-lg text-white/78">
+        <div className="rounded-xl border border-white/10 bg-white/[0.02] px-3 py-3 text-right font-mono text-lg text-white/78">
           {percentage.toFixed(1)}%
         </div>
       </div>
@@ -634,6 +634,8 @@ export function PortalRecipeLab({
         keyword,
       };
 
+      console.log("SAVE PAYLOAD:", payload);
+
       const [response] = await Promise.all([
         fetch("/api/portal/lab", {
           method: "POST",
@@ -684,8 +686,8 @@ export function PortalRecipeLab({
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-          <section className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
+        <div className="relative z-40 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
+          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
             <div className="grid gap-5 md:grid-cols-2">
               <GlassSelect
                 label="Structure Archetype"
@@ -711,12 +713,12 @@ export function PortalRecipeLab({
                 <input
                   value={recipeName}
                   onChange={(event) => setRecipeName(event.target.value)}
-                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-white outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
                 />
               </div>
             </div>
           </section>
-          <section className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
+          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
             <div className="grid gap-5 md:grid-cols-2">
               <div>
                 <span className="mb-2 block font-mono text-xs uppercase tracking-[0.28em] text-white/38">
@@ -729,7 +731,7 @@ export function PortalRecipeLab({
                   step={0.5}
                   value={batchLiters}
                   onChange={(event) => setBatchLiters(Math.max(0.5, Number(event.target.value) || 0.5))}
-                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-white outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 font-mono text-white outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
                 />
               </div>
               <div>
@@ -743,7 +745,7 @@ export function PortalRecipeLab({
                   step={1}
                   value={overrunTargetPct}
                   onChange={(event) => setOverrunTargetPct(Math.max(0, Number(event.target.value) || 0))}
-                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 font-mono text-white outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 font-mono text-white outline-none transition focus:border-[#00E5FF]/45 focus:bg-[#00E5FF]/5"
                 />
               </div>
               <GlassSelect
@@ -813,7 +815,7 @@ export function PortalRecipeLab({
           </section>
         </div>
 
-        <section className="space-y-4">
+        <section className="relative z-10 space-y-4">
           <TelemetryHUD
             totalPac={recipe.metrics.pac}
             totalPod={recipe.metrics.pod}
@@ -824,29 +826,29 @@ export function PortalRecipeLab({
             <SummaryCard label="Fat" value={`${recipe.metrics.fat.toFixed(1)}%`} />
             <SummaryCard label="Total Batch Cost" value={formatCurrency(recipe.totalCost)} accent="emerald" />
             <SummaryCard label="Cost / kg" value={formatCurrency(costPerKg)} accent="emerald" />
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.02] p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] backdrop-blur-xl">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/36">
-                    Target Case
-                  </p>
-                  <p className="mt-3 text-base font-medium text-white">
-                    {activeDisplayCase?.name ?? "No active display case"}
-                  </p>
-                  <p className="mt-1 text-xs text-white/42">
-                    {activeDisplayCase
-                      ? `${activeDisplayCase.style} / ${activeDisplayCase.target_temp_c.toFixed(1)}°C`
-                      : "Assign a case to route this formula"}
-                  </p>
-                </div>
-                {activeDisplayCase ? (
-                  <div className="rounded-full border border-[#FF073A]/20 bg-black/40 px-3 py-2 font-mono text-[#FF073A] drop-shadow-[0_0_12px_rgba(255,7,58,0.4)]">
-                    <div className="flex items-center gap-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] backdrop-blur-2xl">
+              <div className="flex flex-col justify-between gap-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/36">
+                      Target Case
+                    </p>
+                    <p className="mt-3 text-base font-medium text-white">
+                      {activeDisplayCase?.name ?? "No active display case"}
+                    </p>
+                    <p className="mt-1 text-xs text-white/42">
+                      {activeDisplayCase
+                        ? `${activeDisplayCase.style} / ${activeDisplayCase.target_temp_c.toFixed(1)}°C`
+                        : "Assign a case to route this formula"}
+                    </p>
+                  </div>
+                  {activeDisplayCase ? (
+                    <div className="inline-flex items-center gap-2 rounded-md border border-[#FF073A]/20 bg-[#FF073A]/10 px-2 py-1 font-mono text-sm text-[#FF073A] drop-shadow-[0_0_15px_rgba(255,7,58,0.5)]">
                       <Thermometer size={14} />
                       <span>{activeDisplayCase.target_temp_c.toFixed(1)}°C</span>
                     </div>
-                  </div>
-                ) : null}
+                  ) : null}
+                </div>
               </div>
               {suggestedCase && activeDisplayCase?.id !== suggestedCase.id ? (
                 <p className="mt-4 text-xs text-cyan-100/78">
@@ -857,7 +859,7 @@ export function PortalRecipeLab({
           </div>
         </section>
 
-        <section className="rounded-[2rem] border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
+        <section className="relative z-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_8px_32px_0_rgba(0,0,0,0.4)] backdrop-blur-2xl">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-white/36">
@@ -909,12 +911,12 @@ export function PortalRecipeLab({
             </AnimatePresence>
           </div>
 
-          <div className="mt-6 flex flex-col gap-4 rounded-[1.6rem] border border-white/10 bg-black/20 px-5 py-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+          <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)] backdrop-blur-2xl md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
               <p className="font-mono text-[11px] uppercase tracking-[0.26em] text-white/36">
                 Batch Summary
               </p>
-              <p className="font-mono text-3xl text-[#00E5FF] drop-shadow-[0_0_12px_rgba(0,229,255,0.28)]">
+              <p className="font-mono text-3xl text-[#00E5FF] drop-shadow-[0_0_15px_rgba(0,229,255,0.5)]">
                 {recipe.batchWeight.toFixed(0)}g
               </p>
               <p className="text-sm text-white/48">

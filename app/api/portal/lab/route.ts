@@ -50,6 +50,12 @@ export async function POST(request: Request) {
   const payload = (await request.json()) as LabSavePayload;
   const recipeName = String(payload.recipeName ?? "").trim();
   const ingredients = Array.isArray(payload.ingredients) ? payload.ingredients : [];
+  const normalizedIngredients = ingredients.map((ingredient) => ({
+    name: String(ingredient.name ?? "Ingredient"),
+    grams: Number(ingredient.grams ?? 0),
+    percentage: Number(ingredient.percentage ?? 0),
+    category: typeof ingredient.category === "string" ? ingredient.category : "Other",
+  }));
 
   if (!recipeName || ingredients.length === 0) {
     return NextResponse.json(
@@ -58,44 +64,58 @@ export async function POST(request: Request) {
     );
   }
 
-  const recipeInsert = await supabase
+  const baseInsert = {
+    user_id: user.id,
+    name: recipeName,
+    created_at: new Date().toISOString(),
+    total_weight_grams: Number(payload.totalMixWeight ?? 0),
+    equipment_id: typeof payload.equipmentId === "string" ? payload.equipmentId : null,
+    is_sorbet:
+      payload.baseType === "water" ||
+      payload.archetypeKey === "fruit-sorbet" ||
+      payload.archetypeKey === "vegan",
+    logic_snapshot: {
+      archetypeKey:
+        typeof payload.archetypeKey === "string" ? payload.archetypeKey : "portal-lab",
+      baseType: typeof payload.baseType === "string" ? payload.baseType : "dairy",
+      batchLiters: Number(payload.batchLiters ?? 1),
+      flavorIntensityPct: Number(payload.flavorIntensityPct ?? 10),
+      podBias: Number(payload.podBias ?? 1),
+      overrunTargetPct: Number(payload.overrunTargetPct ?? 35),
+      keyword: typeof payload.keyword === "string" ? payload.keyword : recipeName,
+      estimatedCost: Number(payload.totalRecipeCost ?? 0),
+      totalPac: Number(payload.totalPac ?? 0),
+      totalPod: Number(payload.totalPod ?? 0),
+      totalSolids: Number(payload.totalSolids ?? 0),
+      totalFat: Number(payload.totalFat ?? 0),
+      ingredients_json: normalizedIngredients,
+    },
+  };
+
+  const savePayload = {
+    ...baseInsert,
+    active_case_id: typeof payload.activeCaseId === "string" ? payload.activeCaseId : null,
+    is_on_display: typeof payload.activeCaseId === "string",
+  };
+
+  console.log("SAVE PAYLOAD:", JSON.stringify(savePayload, null, 2));
+
+  let recipeInsert = await supabase
     .from("recipes")
-    .insert({
-      user_id: user.id,
-      name: recipeName,
-      created_at: new Date().toISOString(),
-      total_weight_grams: Number(payload.totalMixWeight ?? 0),
-      equipment_id: typeof payload.equipmentId === "string" ? payload.equipmentId : null,
-      active_case_id: typeof payload.activeCaseId === "string" ? payload.activeCaseId : null,
-      is_on_display: typeof payload.activeCaseId === "string",
-      is_sorbet:
-        payload.baseType === "water" ||
-        payload.archetypeKey === "fruit-sorbet" ||
-        payload.archetypeKey === "vegan",
-      logic_snapshot: {
-        archetypeKey:
-          typeof payload.archetypeKey === "string" ? payload.archetypeKey : "portal-lab",
-        baseType: typeof payload.baseType === "string" ? payload.baseType : "dairy",
-        batchLiters: Number(payload.batchLiters ?? 1),
-        flavorIntensityPct: Number(payload.flavorIntensityPct ?? 10),
-        podBias: Number(payload.podBias ?? 1),
-        overrunTargetPct: Number(payload.overrunTargetPct ?? 35),
-        keyword: typeof payload.keyword === "string" ? payload.keyword : recipeName,
-        estimatedCost: Number(payload.totalRecipeCost ?? 0),
-        totalPac: Number(payload.totalPac ?? 0),
-        totalPod: Number(payload.totalPod ?? 0),
-        totalSolids: Number(payload.totalSolids ?? 0),
-        totalFat: Number(payload.totalFat ?? 0),
-        ingredients_json: ingredients.map((ingredient) => ({
-          name: String(ingredient.name ?? "Ingredient"),
-          grams: Number(ingredient.grams ?? 0),
-          percentage: Number(ingredient.percentage ?? 0),
-          category: typeof ingredient.category === "string" ? ingredient.category : "Other",
-        })),
-      },
-    })
+    .insert(savePayload)
     .select("id, created_at")
     .single();
+
+  if (
+    recipeInsert.error &&
+    /active_case_id|is_on_display|column .* does not exist/i.test(recipeInsert.error.message)
+  ) {
+    recipeInsert = await supabase
+      .from("recipes")
+      .insert(baseInsert)
+      .select("id, created_at")
+      .single();
+  }
 
   if (recipeInsert.error || !recipeInsert.data) {
     return NextResponse.json(

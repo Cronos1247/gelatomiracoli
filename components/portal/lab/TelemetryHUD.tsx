@@ -28,7 +28,7 @@ function TelemetryMetric({
 
 export function TelemetryHUD({ totalPac, totalPod, totalSolids }: TelemetryHUDProps) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 shadow-2xl backdrop-blur-2xl">
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-8 shadow-2xl backdrop-blur-2xl">
       <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16">
         <TelemetryMetric label="PAC" value={totalPac} />
         <TelemetryMetric label="POD" value={totalPod} />
